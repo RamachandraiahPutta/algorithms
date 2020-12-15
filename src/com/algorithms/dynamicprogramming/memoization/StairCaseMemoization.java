@@ -1,4 +1,7 @@
-package com.algorithms.dynamicprogramming;
+package com.algorithms.dynamicprogramming.memoization;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /*
  *	There are n stairs, a person standing at the bottom wants to reach the top. 
@@ -7,12 +10,13 @@ package com.algorithms.dynamicprogramming;
  *	input: 
  *		N - no of steps in staircase
  *		X - array of allowed steps a person can take 
+ *		m = length of X
  * 	Time Complexity:
- * 		1) Naive Approach: O(2^N)
- * 		2) Dynamic Programming: O(N)
+ * 		1) Naive Approach: O(m * 2^N)
+ * 		2) Dynamic Programming: O(m * N)
  **/
 
-public class StairCase {
+public class StairCaseMemoization {
 
 	static int numWays_X_Naive(int N, int[] X) {
 		int no_of_ways = 0;
@@ -28,31 +32,31 @@ public class StairCase {
 		return no_of_ways;
 	}
 
-	static int numWays_X_bottomUp(int N, int[] X) {
+	static int numWays_X_TopDown(int N, int[] X, Map<Integer, Integer> memo) {
+
+		if (memo.containsKey(N)) {
+			return memo.get(N);
+		}
+
+		int no_of_ways = 0;
 
 		if (N == 0)
 			return 1;
 
-		int[] nums = new int[N + 1];
-		nums[0] = 1;
-
-		for (int i = 1; i <= N; i++) {
-			int no_of_ways = 0;
-			for (int j : X) {
-				if (i - j >= 0) {
-					no_of_ways += nums[i - j];
-				}
-			}
-			nums[i] = no_of_ways;
+		for (int i : X) {
+			if (N - i >= 0)
+				no_of_ways += numWays_X_TopDown(N - i, X, memo);
 		}
+		memo.put(N, no_of_ways);
+		return no_of_ways;
 
-		return nums[N];
 	}
 
 	public static void main(String args[]) {
 		int s = 44;
 		int[] X = { 1, 3, 5 };
-		System.out.println("Number of ways using Dynamic Programming = " + numWays_X_bottomUp(s, X));
+		Map<Integer, Integer> memo = new HashMap<Integer, Integer>();
+		System.out.println("Number of ways using Dynamic Programming = " + numWays_X_TopDown(s, X, memo));
 		System.out.println("Number of ways using Naive = " + numWays_X_Naive(s, X));
 	}
 }
