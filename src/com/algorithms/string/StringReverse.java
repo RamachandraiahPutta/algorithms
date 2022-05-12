@@ -5,12 +5,12 @@ public class StringReverse {
     private String reverse(String inputString) {
 
         char[] chars = inputString.toCharArray();
-        int head = 0, tail = inputString.length() - 1;
+        int head = 0, length = inputString.length(), tail = length - 1;
         while (head < tail) {
-            while (isSpecialChar(chars[head])) {
+            while (head < length - 1 && isSpecialChar(chars[head])) {
                 head++;
             }
-            while (isSpecialChar(chars[tail])) {
+            while (tail >= 1 && isSpecialChar(chars[tail])) {
                 tail--;
             }
             char temp = chars[head];
@@ -32,7 +32,7 @@ public class StringReverse {
     public static void main(String[] args) {
         StringReverse stringReverse = new StringReverse();
         String inputString = "abc/defgh$ij";
-//        inputString = "ab#c#####d";
+        inputString = "######ab";
         System.out.println(stringReverse.reverse(inputString));
     }
 
